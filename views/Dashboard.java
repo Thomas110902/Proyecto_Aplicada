@@ -9,7 +9,7 @@ import paneles.Menu;
 public class Dashboard {
 
     public Dashboard(String nombreUsuario, JFrame ventanaPadre) {
-        JFrame frame = new JFrame("Dashboard");
+        JFrame frame = new JFrame("Reloj Digital");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1300, 900);
         frame.setLocationRelativeTo(null);
@@ -65,29 +65,30 @@ public class Dashboard {
             }
         };
 
-        // ------------------- Paneles para CardLayout -------------------
+              // ------------------- Paneles para CardLayout -------------------
         JPanel panelClima = crearPanel("Clima", new String[]{"22°C / 71.6°F", "Soleado"});
         JPanel panelReloj = crearPanel("Reloj y Temporizadores", new String[]{"Cronómetro y alarma aquí"});
-        JPanel panelOpciones = crearPanel("Opciones", null);
+        JPanel panelCalendario = crearPanel("Calendario", null); // renombrado
         JPanel panelTemporizador = crearPanel("Temporizador", null);
         JPanel panelTiempo = crearPanel("Tiempo", null);
         JPanel panelConfiguracion = crearPanel("Configuración", null);
-
+            
         // ------------------- Agregar paneles al CardLayout -------------------
         panelCentral.add(panelClima, "Clima");
         panelCentral.add(panelReloj, "Reloj");
-        panelCentral.add(panelOpciones, "Opciones");
+        panelCentral.add(panelCalendario, "Calendario"); // renombrado
         panelCentral.add(panelTemporizador, "Temporizador");
         panelCentral.add(panelTiempo, "Tiempo");
         panelCentral.add(panelConfiguracion, "Configuracion");
-
+            
         // ------------------- Acciones de los botones -------------------
         menu.getBotonClima().addActionListener(e -> showPanel(panelCentral, "Clima"));
         menu.getBotonReloj().addActionListener(e -> showPanel(panelCentral, "Reloj"));
-        menu.getBotonOpciones().addActionListener(e -> showPanel(panelCentral, "Opciones"));
+        menu.getBotonOpciones().addActionListener(e -> showPanel(panelCentral, "Calendario")); // ahora muestra Calendario
         menu.getBotonTemporizador().addActionListener(e -> showPanel(panelCentral, "Temporizador"));
         menu.getBotonTiempo().addActionListener(e -> showPanel(panelCentral, "Tiempo"));
         menu.getBotonConfiguracion().addActionListener(e -> showPanel(panelCentral, "Configuracion"));
+
 
         // ------------------- Agregar panel central al frame -------------------
         frame.add(panelCentral, BorderLayout.CENTER);

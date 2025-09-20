@@ -5,7 +5,7 @@ public class LoginSesion {
     String[] usuarios = {
         "Thomas", "Rockemma", "Alejo", "Jorge_Aju",
         "Victor", "Dereck", "Erick", "Nicole",
-        "pythonLover", "Dulce", "Pereira"
+        "Camila", "Mia", "Pereira","Stephany","Margeory","Vivian","Sofia","Diego Tan"
     };
 
     // Método para validar solo el usuario

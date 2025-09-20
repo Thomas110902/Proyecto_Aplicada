@@ -36,7 +36,7 @@ public class Menu {
         // Crear botones y guardarlos en atributos
         botonClima = crearBoton("Clima");
         botonReloj = crearBoton("Reloj");
-        botonOpciones = crearBoton("Opciones");
+        botonOpciones = crearBoton("Calendario");
         botonTemporizador = crearBoton("Temporizador");
         botonTiempo = crearBoton("Tiempo");
         botonConfiguracion = crearBoton("Configuración");
