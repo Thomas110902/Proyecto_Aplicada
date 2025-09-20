@@ -8,6 +8,14 @@ public class Menu {
     private String nombreUsuario;
     private JFrame ventanaPadre; // ventana a regresar
 
+    // Botones que necesitamos exponer
+    private JButton botonClima;
+    private JButton botonReloj;
+    private JButton botonOpciones;
+    private JButton botonTemporizador;
+    private JButton botonTiempo;
+    private JButton botonConfiguracion;
+
     public Menu(String nombreUsuario, JFrame ventanaPadre) {
         this.nombreUsuario = nombreUsuario;
         this.ventanaPadre = ventanaPadre;
@@ -25,48 +33,69 @@ public class Menu {
         panelMenu.add(usuarioLabel);
         panelMenu.add(Box.createRigidArea(new Dimension(0, 30)));
 
-        String[] opciones = {"Clima", "Reloj", "Opciones", "Temporizador", "Tiempo", "Configuración"};
-        for (String texto : opciones) {
-            JButton boton = new JButton(texto);
-            boton.setMaximumSize(new Dimension(125, 40));
-            boton.setAlignmentX(Component.CENTER_ALIGNMENT);
-            boton.setBackground(Color.WHITE);
-            boton.setForeground(new Color(30, 30, 60));
-            boton.setFocusPainted(false);
-            panelMenu.add(boton);
-            panelMenu.add(Box.createRigidArea(new Dimension(0, 10)));
-        }
+        // Crear botones y guardarlos en atributos
+        botonClima = crearBoton("Clima");
+        botonReloj = crearBoton("Reloj");
+        botonOpciones = crearBoton("Opciones");
+        botonTemporizador = crearBoton("Temporizador");
+        botonTiempo = crearBoton("Tiempo");
+        botonConfiguracion = crearBoton("Configuración");
 
+        panelMenu.add(botonClima);
+        panelMenu.add(Box.createRigidArea(new Dimension(0, 10)));
+        panelMenu.add(botonReloj);
+        panelMenu.add(Box.createRigidArea(new Dimension(0, 10)));
+        panelMenu.add(botonOpciones);
+        panelMenu.add(Box.createRigidArea(new Dimension(0, 10)));
+        panelMenu.add(botonTemporizador);
+        panelMenu.add(Box.createRigidArea(new Dimension(0, 10)));
+        panelMenu.add(botonTiempo);
+        panelMenu.add(Box.createRigidArea(new Dimension(0, 10)));
+        panelMenu.add(botonConfiguracion);
         panelMenu.add(Box.createVerticalGlue());
 
-        JButton regresarButton = new JButton("Regresar");
-        regresarButton.setMaximumSize(new Dimension(100, 40));
-        regresarButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // Botón regresar
+        JButton regresarButton = crearBoton("Regresar");
         regresarButton.setBackground(Color.ORANGE);
         regresarButton.setForeground(Color.WHITE);
-        regresarButton.setFocusPainted(false);
         regresarButton.addActionListener(e -> {
             JFrame frameActual = (JFrame) SwingUtilities.getWindowAncestor(panelMenu);
-            frameActual.dispose(); // cierra dashboard
+            frameActual.dispose(); 
             if (ventanaPadre != null) {
-                ventanaPadre.setVisible(true); // vuelve a mostrar ventana anterior
+                ventanaPadre.setVisible(true);
             }
         });
         panelMenu.add(regresarButton);
         panelMenu.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        JButton salirButton = new JButton("Salir");
-        salirButton.setMaximumSize(new Dimension(100, 40));
-        salirButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // Botón salir
+        JButton salirButton = crearBoton("Salir");
         salirButton.setBackground(Color.RED);
         salirButton.setForeground(Color.WHITE);
-        salirButton.setFocusPainted(false);
         salirButton.addActionListener(e -> System.exit(0));
         panelMenu.add(salirButton);
         panelMenu.add(Box.createRigidArea(new Dimension(0, 20)));
     }
 
+    private JButton crearBoton(String texto) {
+        JButton boton = new JButton(texto);
+        boton.setMaximumSize(new Dimension(125, 40));
+        boton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        boton.setBackground(Color.WHITE);
+        boton.setForeground(new Color(30, 30, 60));
+        boton.setFocusPainted(false);
+        return boton;
+    }
+
     public JPanel getJPanel() {
         return panelMenu;
     }
+
+    // Métodos públicos para acceder a los botones desde Dashboard
+    public JButton getBotonClima() { return botonClima; }
+    public JButton getBotonReloj() { return botonReloj; }
+    public JButton getBotonOpciones() { return botonOpciones; }
+    public JButton getBotonTemporizador() { return botonTemporizador; }
+    public JButton getBotonTiempo() { return botonTiempo; }
+    public JButton getBotonConfiguracion() { return botonConfiguracion; }
 }

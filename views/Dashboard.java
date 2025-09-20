@@ -9,18 +9,49 @@ import paneles.Menu;
 public class Dashboard {
 
     public Dashboard(String nombreUsuario, JFrame ventanaPadre) {
-        JFrame frame = new JFrame("Reloj Digital");
+        JFrame frame = new JFrame("Dashboard");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(1300, 900);
         frame.setLocationRelativeTo(null);
         frame.setLayout(new BorderLayout());
 
         // ------------------- Menu lateral -------------------
-        Menu menu = new Menu(nombreUsuario, ventanaPadre); // pasamos ventanaPadre
-        frame.add(menu.getJPanel(), BorderLayout.EAST); // menú al lado derecho
+        Menu menu = new Menu(nombreUsuario, ventanaPadre);
+        frame.add(menu.getJPanel(), BorderLayout.EAST);
 
-        // ------------------- Panel central -------------------
-        JPanel panelCentral = new JPanel() {
+        // ------------------- Panel superior (header) -------------------
+        Color colorMenu = new Color(30, 30, 60); // mismo color que el menú lateral
+        JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
+        panelSuperior.setOpaque(true);
+        panelSuperior.setBackground(colorMenu);
+
+        // Borde inferior de 2px, gris oscuro
+        panelSuperior.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(50, 50, 50)));
+
+        JLabel fechaLabel = new JLabel("", SwingConstants.LEFT);
+        fechaLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
+        fechaLabel.setForeground(Color.WHITE);
+        panelSuperior.add(fechaLabel);
+
+        JLabel horaLabel = new JLabel("", SwingConstants.LEFT);
+        horaLabel.setFont(new Font("Monospaced", Font.BOLD, 24));
+        horaLabel.setForeground(Color.WHITE);
+        panelSuperior.add(horaLabel);
+
+        frame.add(panelSuperior, BorderLayout.NORTH); // siempre visible
+
+        // ------------------- Timer para actualizar fecha y hora -------------------
+        Timer timer = new Timer(1000, e -> {
+            String horaActual = new SimpleDateFormat("HH:mm:ss").format(new Date());
+            String fechaActual = new SimpleDateFormat("dd 'de' MMM yyyy").format(new Date());
+
+            horaLabel.setText(horaActual);
+            fechaLabel.setText(fechaActual);
+        });
+        timer.start();
+
+        // ------------------- Panel central con CardLayout y fondo degradado -------------------
+        JPanel panelCentral = new JPanel(new CardLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -33,48 +64,63 @@ public class Dashboard {
                 g2d.fillRect(0, 0, getWidth(), getHeight());
             }
         };
-        panelCentral.setLayout(new BorderLayout());
 
-        // Hora actual arriba
-        JLabel horaLabel = new JLabel("", SwingConstants.CENTER);
-        horaLabel.setFont(new Font("Monospaced", Font.BOLD, 48));
-        horaLabel.setForeground(Color.WHITE);
-        panelCentral.add(horaLabel, BorderLayout.NORTH);
+        // ------------------- Paneles para CardLayout -------------------
+        JPanel panelClima = crearPanel("Clima", new String[]{"22°C / 71.6°F", "Soleado"});
+        JPanel panelReloj = crearPanel("Reloj y Temporizadores", new String[]{"Cronómetro y alarma aquí"});
+        JPanel panelOpciones = crearPanel("Opciones", null);
+        JPanel panelTemporizador = crearPanel("Temporizador", null);
+        JPanel panelTiempo = crearPanel("Tiempo", null);
+        JPanel panelConfiguracion = crearPanel("Configuración", null);
 
-        // Temporizador en el centro
-        JLabel timerLabel = new JLabel("00:30", SwingConstants.CENTER);
-        timerLabel.setFont(new Font("Monospaced", Font.BOLD, 100));
-        timerLabel.setForeground(new Color(0, 255, 255));
-        panelCentral.add(timerLabel, BorderLayout.CENTER);
+        // ------------------- Agregar paneles al CardLayout -------------------
+        panelCentral.add(panelClima, "Clima");
+        panelCentral.add(panelReloj, "Reloj");
+        panelCentral.add(panelOpciones, "Opciones");
+        panelCentral.add(panelTemporizador, "Temporizador");
+        panelCentral.add(panelTiempo, "Tiempo");
+        panelCentral.add(panelConfiguracion, "Configuracion");
 
+        // ------------------- Acciones de los botones -------------------
+        menu.getBotonClima().addActionListener(e -> showPanel(panelCentral, "Clima"));
+        menu.getBotonReloj().addActionListener(e -> showPanel(panelCentral, "Reloj"));
+        menu.getBotonOpciones().addActionListener(e -> showPanel(panelCentral, "Opciones"));
+        menu.getBotonTemporizador().addActionListener(e -> showPanel(panelCentral, "Temporizador"));
+        menu.getBotonTiempo().addActionListener(e -> showPanel(panelCentral, "Tiempo"));
+        menu.getBotonConfiguracion().addActionListener(e -> showPanel(panelCentral, "Configuracion"));
+
+        // ------------------- Agregar panel central al frame -------------------
         frame.add(panelCentral, BorderLayout.CENTER);
         frame.setVisible(true);
+    }
 
-        // ------------------- Temporizador de 30 segundos -------------------
-        final int[] tiempoRestante = {30};
-        Timer timer = new Timer(1000, e -> {
-            tiempoRestante[0]--;
+    // ------------------- Métodos auxiliares -------------------
+    private void showPanel(JPanel panelCentral, String nombre) {
+        CardLayout cl = (CardLayout) panelCentral.getLayout();
+        cl.show(panelCentral, nombre);
+    }
 
-            int horas = tiempoRestante[0] / 3600;
-            int minutos = (tiempoRestante[0] % 3600) / 60;
-            int segundos = tiempoRestante[0] % 60;
-            String tiempoFormateado = String.format("%02d:%02d:%02d", horas, minutos, segundos);
-            timerLabel.setText(tiempoFormateado);
+    private JPanel crearPanel(String titulo, String[] detalles) {
+        JPanel panel = new JPanel();
+        panel.setOpaque(false);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-            // Beep últimos 10 segundos
-            if (tiempoRestante[0] <= 10 && tiempoRestante[0] > 0) {
-                Toolkit.getDefaultToolkit().beep();
+        panel.add(crearLabel(titulo, 32, true));
+        if (detalles != null) {
+            for (String detalle : detalles) {
+                panel.add(crearLabel(detalle, 24, false));
             }
+        }
 
-            if (tiempoRestante[0] <= 0) {
-                ((Timer) e.getSource()).stop();
-                JOptionPane.showMessageDialog(panelCentral, "¡Tiempo terminado!");
-            }
+        panel.add(Box.createVerticalGlue());
+        return panel;
+    }
 
-            // Actualizar hora actual
-            String horaActual = new SimpleDateFormat("HH:mm:ss").format(new Date());
-            horaLabel.setText("Hora actual: " + horaActual);
-        });
-        timer.start();
+    private JLabel crearLabel(String texto, int size, boolean bold) {
+        JLabel label = new JLabel(texto);
+        label.setForeground(Color.WHITE);
+        label.setFont(new Font("SansSerif", bold ? Font.BOLD : Font.PLAIN, size));
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return label;
     }
 }
