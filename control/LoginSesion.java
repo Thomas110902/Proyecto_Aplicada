@@ -4,7 +4,7 @@ public class LoginSesion {
     // Lista de usuarios válidos
     String[] usuarios = {
         "Thomas", "Rockemma", "Alejo", "Jorge_Aju",
-        "Victor", "Dereck", "Erick", "Nicole",
+        "Victor", "Dereck", "Erick", "Mi bb tiquita <3",
         "Camila", "Mia", "Pereira","Stephany","Margeory","Vivian","Sofia","Diego Tan"
     };
 

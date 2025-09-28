@@ -1,0 +1,7 @@
+[2025-09-26 07:43] jdsndss → Activada
+[2025-09-26 07:43:07] jdsndss → Detenida
+[2025-09-26 07:51:59] Alarma → Estado cambiado a ON
+[2025-09-26 07:52] Alarma → Activada
+[2025-09-26 07:52:03] Alarma → Detenida
+[2025-09-28 17:36:22] Alarma → Estado cambiado a ON
+[2025-09-28 17:37] Alarma → Activada
